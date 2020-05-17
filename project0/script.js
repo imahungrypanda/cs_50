@@ -18,10 +18,18 @@ const newTodo = () => {
     }
   )
   const todoInput = createDomElement('input', { class: classNames.TODO_TEXT })
+  const deleteButton = createDomElement('button',
+      {
+        class: classNames.TODO_DELETE,
+        onclick: 'deleteTodo(this)'
+      }
+  )
+  deleteButton.innerText = 'Delete'
   const newTodo = createDomElement("li", { class: classNames.TODO_ITEM })
 
   newTodo.appendChild(checkbox)
   newTodo.appendChild(todoInput)
+  newTodo.appendChild(deleteButton)
   list.appendChild(newTodo)
 
   updateTotalCount()
@@ -34,6 +42,11 @@ const updateTotalCount = () => {
 
 const updateUncheckedCount = () => {
   uncheckedCountSpan.innerText = document.querySelectorAll("input[type='checkbox']:not(:checked)").length
+}
+
+const deleteTodo = (e) => {
+  list.removeChild(e.parentNode)
+  updateTotalCount()
 }
 
 const createDomElement = (tag, options = {}) => {
