@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import Timer from './components/Timer'
+import TimerContainer from './components/TimerContainer'
 
 const styles = StyleSheet.create({
   container: {
@@ -12,13 +12,11 @@ const styles = StyleSheet.create({
   },
 });
 
-const START_TIME_AMOUNT = 25 * 60
-
 export default class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Timer startTime={START_TIME_AMOUNT} />
+        <TimerContainer />
       </View>
     );
   }
