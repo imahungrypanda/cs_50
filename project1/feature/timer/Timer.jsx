@@ -1,6 +1,7 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
+import Button from '../../components/Button'
 import { convertToDisplayTime, vibrate } from '../../utils'
 
 const styles = StyleSheet.create({
@@ -10,32 +11,47 @@ const styles = StyleSheet.create({
   timerText: {
     fontSize: 40,
   },
+  timerButtonContainer: {
+    marginTop: 10,
+    width: 300,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
 })
 
 const Timer = ({ startWorkTime, startBreakTime }) => {
   const [useWorkTime, setUseWorkTime] = React.useState(true)
   const [time, setTime] = React.useState(startWorkTime)
-  let interval = null
 
-  const resetTime = React.useCallback(() => {
+  const savedCallback = React.useRef()
+  const interval = React.useRef()
+
+  const resetTime = () => {
     if (useWorkTime) {
       setTime(startBreakTime)
     } else {
       setTime(startWorkTime)
     }
-  }, [useWorkTime])
+  }
 
-  React.useEffect(() => {
-    interval = setInterval(() => {
-      setTime(time - 1)
+  const stopCountDown = () => {
+    clearInterval(interval.current)
+  }
+
+  const startCounter = () => {
+    interval.current = setInterval(() => {
+      savedCallback.current()
     }, 1000)
-
-    return () => {
-      clearInterval(interval)
-    }
-  })
+  }
 
   React.useEffect(() => {
+    startCounter()
+
+    return () => stopCountDown
+  }, [])
+
+  React.useEffect(() => {
+    savedCallback.current = () => setTime(time - 1)
     if (time < 0) {
       // vibrate()
       resetTime()
@@ -47,6 +63,11 @@ const Timer = ({ startWorkTime, startBreakTime }) => {
     <View style={styles.timerView}>
       <Text style={styles.timerText}>{useWorkTime ? 'Work' : 'Relax'}</Text>
       <Text style={styles.timerText}>Timer: {convertToDisplayTime(time)}</Text>
+      <View style={styles.timerButtonContainer}>
+        <Button title='Reset' onPress={resetTime}></Button>
+        <Button title='Stop' onPress={stopCountDown}></Button>
+        <Button title='Start' onPress={startCounter}></Button>
+      </View>
     </View>
   )
 }
