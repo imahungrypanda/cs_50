@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import TimerContainer from './components/TimerContainer'
+import TimerContainer from './feature/timer/TimerContainer'
 
 const styles = StyleSheet.create({
   container: {
